@@ -1,0 +1,240 @@
+\documentclass[hidelinks,11pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\setlength{\parindent}{0pt}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lipsum}
+\usepackage[left=1.06cm,top=0.5cm,right=1.06cm,bottom=0.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage[fixed]{fontawesome5}
+\RequirePackage{tikz}
+\RequirePackage[fixed]{fontawesome5}
+\usetikzlibrary{arrows}
+\definecolor{body}{gray}{0.2}
+\newcommand{\cvtag}[1]{%
+  \tikz[baseline]\node[anchor=base,draw=body!30,rounded corners,inner xsep=1ex,inner ysep =0.6ex,text height=1.2ex,text depth=.1ex]{#1};
+}
+
+%% v1.3: Incorporating hyperlinks
+%% v1.3.1: using \unfriendlydetokenize to avoid breaking unicode
+%% v1.6: Use accsupp so that when copying/pasting the icon from PDF to a text
+%%       file, the icon name is pasted
+\ExplSyntaxOn
+\NewDocumentCommand{\printinfo}{m m o}{%
+  \BeginAccSupp{method=escape,ActualText={#1:~#2}}
+  \IfNoValueTF{#3}{%
+    \mbox{\textcolor{accent}{\normalfont #1}~\utffriendlydetokenize{#2}\hspace{2em}}%
+  }{%
+     \if@withhyper%
+      \mbox{\textcolor{accent}{\normalfont #1}~
+      \href{#3}{\utffriendlydetokenize{#2}}\hspace{2em}}
+     \else%
+       \ClassWarning{Please specify [withhyper] option to enable hyperlinks. Printing out full hyperlink prefix #1 for now.}%
+      \mbox{\textcolor{accent}{\normalfont #1}~{\utffriendlydetokenize{#3#2}}\hspace{2em}}%
+     \fi%
+  }%
+  \EndAccSupp{}
+}%
+
+%% v1.3: Exploring convenient creation of fields
+%% v1.6: Add starred mode to create \printinfo with full URL
+\NewDocumentCommand{\NewInfoField}{s m m o}{%
+  \IfBooleanF{#1}{
+    \IfNoValueF{#4}{\csdef{#2 hyperprefix}{#4}}%
+  }
+  \csdef{#2 symbol}{#3}%
+  \IfBooleanTF{#1}
+    { \csdef{#2}##1##2{%
+        \if@withhyper
+          \IfNoValueTF {##2}
+            {\printinfo{\csuse{#2 symbol}}{##1}}%
+            {\printinfo{\csuse{#2 symbol}}{##1}[##2]}%
+        \else
+          \printinfo{\csuse{#2 symbol}}{##1}%
+        \fi%
+      }%
+    }
+    { \csdef{#2}##1{%
+        \if@withhyper
+          \IfNoValueTF {#4}
+            {\printinfo{\csuse{#2 symbol}}{##1}}%
+            {\printinfo{\csuse{#2 symbol}}{##1}[\csuse{#2 hyperprefix}##1]}%
+        \else
+          \printinfo{\csuse{#2 symbol}}{##1}%
+        \fi%
+      }%
+    }
+}
+\ExplSyntaxOff
+
+\usepackage[defaultfam,tabular,lining]{montserrat} %% Option 'defaultfam'
+%% only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\renewcommand*\oldstylenums[1]{{\fontfamily{Montserrat-TOsF}\selectfont #1}}
+
+%% COMMANDS
+%\definecolor{LinkColor}{RGB}{32,42,110}
+\definecolor{LinkColor}{RGB}{0,0,0}
+% myhref has the same parameters that href has, but the hypertext is colored with LinkColor and then underlined
+\newcommand{\myhref}[2]{\href{#1}{\textcolor{LinkColor}{\underline{#2}}}}
+
+%by: Aline R. Antunes
+
+\begin{document}
+\begin{center}
+\begin{Large}
+    \textbf{Simone Gherardi}
+\end{Large}
+    \\ 
+    \hrulefill
+\end{center}
+
+\begin{center}
+    \href{mailto:simone.gherardi2@gmail.com}{\faEnvelope\ simone.gherardi2@gmail.com} \textbullet \ \href{https://wa.me/393341810181}{\faPhone\ +39 3341810181} \textbullet \ \href{https://github.com/SimoneGherardi}{\faGithub\ SimoneGherardi} \textbullet
+	\href{https://www.linkedin.com/in/simone-gherardi-3bb39165/}{\faLinkedin\ SimoneGherardi}
+\end{center}
+
+% -------------- WORK EXPERIENCE
+\begin{center}
+    \textbf{WORK EXPERIENCE}
+\end{center}
+
+    
+\textbf{\textit{\myhref{https://amadeus.com/fr}{amadeus}}, as {\textit{\myhref{https://www.alten.fr/}{ALTEN}} contractor}} \hfill Nice (FR)
+
+\begin{small}
+\textbf{Backend Software Developer} \cvtag{C++}\cvtag{Bash}\cvtag{Git}\cvtag{CI/CD}\cvtag{Jenkins}\cvtag{MongoDB}\cvtag{Cloud} \hfill JAN 2024 – 
+\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+    \item Develop features for the functional team of the Revenue Management Solutions Train (SAFe), to maximize the clients revenue by forecasting the demand for flights and adapting the tickets price;
+    \item Maintain the already existing codebase by fixing bugs and refactoring;
+    \item For each feature, create integration tests and adapt the existing ones to avoid regressions;
+    \item Maintain the test suite running in the CI/CD;
+    \item Participate in Cloud Migration adaptations (Erding to Azure);
+    \item Coordinate the Production deployment supporting the interactions with the Changes Control Board (CCB).
+\end{itemize}
+
+\textbf{Scrum Master} \cvtag{SAFe}\cvtag{Agile}\cvtag{Jira} \hfill JAN 2025 – 
+\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+    \item Facilitate the daily/weekly work of the Scrum members handling the SAFe ceremonies;
+    \item Coordinate with the other Scrums, the RTE, the Product Manager, the System Architect and the Business Owners during the Planning Events to plan in advance the activities, optimizing the Scrum resources;
+    \item Ensure the accomplishment of Scrum objectives settled with the Managers.
+    \item Lead the refinement of Quality topics to reserve Scrum resources to cope technical debt
+\end{itemize}
+\end{small}
+\vspace{3pt}
+
+
+\textbf{\textit{\href{https://hello.codinggiants.com/}{Coding Giants}}} \hfill Remote
+
+\begin{small}
+\textbf{Coding teacher} \cvtag{Scratch}\cvtag{Minecraft Education} \hfill SEP 2023 – JAN 2024 
+\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+    \item Teach the basics of coding and Videogame programming to 7-16 y.o. kids, both in one-shot classes and structured courses.
+\end{itemize}
+\end{small}
+\vspace{3pt}
+
+\textbf{Agriturismo Il Lago dei Sogni} \hfill Carpi, Modena (IT)
+
+\begin{small}
+\textbf{Waiter and support} \hfill SEP 2013 – AUG 2021
+%\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+%    \item Interact directly with the customers and handle the full experience;
+%    \item Support in the kitchen, backing up in any role.
+%\end{itemize}
+
+\end{small}
+%\vspace{3pt}
+% -------------- LEADERSHIP & ACTIVITIES
+%\begin{center}
+%    \textbf{LEADERSHIP \& ACTIVITIES}
+%\end{center}
+
+
+\vspace{3pt}
+% -------------- EDUCATION
+\begin{center}
+    \textbf{EDUCATION}
+\end{center}
+  
+
+\textbf{Lappeenranta-Lahti University of Technology} \hfill Lappeenranta, FI
+
+\begin{small}
+
+\vspace{3pt}
+\textbf{Master's Degree,} \textit{\href{https://www.lut.fi/web/en/admissions/masters-studies/msc-in-technology/computational-engineering/data-centric-engineering}{Master of Science in Technology, Computer Vision and Pattern Recognition}}
+
+Computational Engineering and Technical Physics \cvtag{Machine Learning}\cvtag{UX Design}\cvtag{GPGPU Computing}
+
+\end{small}  
+\vspace{3pt}
+
+\textbf{Politecnico di Milano} \hfill Milano, IT
+
+\begin{small}
+
+\vspace{3pt}   
+\textbf{Master's Degree,} \textit{\href{https://www.ingindinf.polimi.it/it}{Master of Science, Computer Science and Engineering}} \hfill{Grade: 92/110}
+
+INGEGNERIA INFORMATICA - Ingegneria Industriale e dell'Informazione \cvtag{AI}
+\end{small}
+
+\vspace{3pt}
+
+{Master Thesis: \myhref{https://drive.google.com/file/d/1zclPkAC232IkhAycl-xXkfR6Jo307D3W/view?usp=sharing}{\textit{\textbf{"Human Micro Gesture Recognition by Adversarial Training"}}}} \cvtag{Python}
+\vspace{3pt}
+
+\textbf{Universitá degli studi di Modena e Reggio Emilia} \hfill Modena, IT
+
+\begin{small}
+\textbf{Bachelor's Degree,} \href{https://www.ingmo.unimore.it/site/home.html}{Computer Engineering, Dip. di Ingegneria "Enzo Ferrari"} \hfill Grade: 93/110
+\end{small}
+
+\vspace{3pt}
+{Bachelor Thesis: \myhref{https://drive.google.com/file/d/1Y-gcaBoKBj2wpza-Gsdh22TtwyI_DkuA/view?usp=sharing}{\textit{\textbf{"Drivers Manager Project"}}}} \cvtag{Django}
+\vspace{3pt}
+
+
+\vspace{3pt}
+% -------------- PROJECTS
+\begin{center}
+    \textbf{PROJECTS}
+\end{center}
+
+\textbf{{\myhref{https://polimi-game-collective.itch.io/kiyo-and-the-unreliable-hero}{Kiyo and the Unreliable Hero}} - \textit{Videogame Beta}} \cvtag{C\#}\cvtag{Unity} \hfill SEP 2020 – FEB 2021
+\begin{small}
+\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+    \item Team project with other developers, Game Designer and Graphics Designer;
+    \item Develop the Beta in a 3 months scheduled timetable with intermediate steps;
+    \item Winner of \myhref{https://insertcoin.isas.academy/game-design-challenge/}{InsertCoin - GameDev Convention 2021}, presented at \myhref{https://www.comicon.it/}{Comicon 2021} (NA, IT).
+\end{itemize}
+\end{small}
+\vspace{3pt}
+\textbf{{\myhref{https://youtu.be/1tNf1K6NSZ0}{CGRed - Platform Maker with Vulkan}} - \textit{Videogame Alpha}} \cvtag{Vulkan} \hfill APR 2023 – SEP 2023
+\begin{small}
+\begin{itemize}[noitemsep, topsep=0pt, partopsep=0pt, parsep=0pt]
+    \item Team project to exploit Vulkan potential for low-level graphics programming
+\end{itemize}
+\end{small}
+
+\vspace{3pt}
+% -------------- SKILLS & INTERESTS
+\begin{center}
+    \textbf{TECHNICAL SKILLS \& INTERESTS}
+\end{center}
+\begin{small}
+
+ \textbf{Advanced knowledge:} \cvtag{C++}\cvtag{Python}\cvtag{Bash}\cvtag{Git}\cvtag{C\#}\cvtag{Unity}\cvtag{Agile}\cvtag{Jira}\cvtag{SAFe}
+ 
+ \textbf{Good knowledge:} \cvtag{CI/CD}\cvtag{Jenkins}\cvtag{MongoDB}\cvtag{Cloud}\cvtag{Scratch}\cvtag{Minecraft Education}\cvtag{Django}\cvtag{Vulkan}
+\vspace{-1pt}
+\textbf{Language:} {\cvtag{Italian - M}\cvtag{English - C1}\cvtag{French - B2}}
+
+\textbf{Interests:} {\cvtag{Videogame design}\cvtag{Videogame programming}\cvtag{Video Editing}}
+    
+\end{small}
+\end{document}
