@@ -42,9 +42,33 @@
             <!-- CV Game Section -->
             <section id="cv-game" class="game-section">
                 <div class="game-container">
-                    <h3>CV RPG: Break doors (Left Click) & Read Docs (Right Click)</h3>
-                    <div style="position: relative;">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <h3 style="margin-bottom: 0.5rem;">Explore the rooms to learn about me!</h3>
+                        <a href="#hero" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.9em; border-radius: 20px;">Skip Game & View CV ↓</a>
+                    </div>
+                    <p class="game-instructions">
+                        <span class="desktop-hint">WASD to Move • Mouse to Aim • Left Click to Attack • Hover & Press 'E' to Read</span>
+                        <span class="mobile-hint">Use On-Screen Controls</span>
+                    </p>
+                    <div class="canvas-wrapper">
                         <canvas id="gameCanvas" width="800" height="500"></canvas>
+                        
+                        <!-- Mobile Controls -->
+                        <div id="mobile-controls">
+                            <div class="d-pad">
+                                <button id="btn-up" class="d-btn">▲</button>
+                                <div class="d-row">
+                                    <button id="btn-left" class="d-btn">◀</button>
+                                    <button id="btn-right" class="d-btn">▶</button>
+                                </div>
+                                <button id="btn-down" class="d-btn">▼</button>
+                            </div>
+                            <div class="action-buttons">
+                                <button id="btn-interact" class="action-btn interact-btn">👁️</button>
+                                <button id="btn-attack" class="action-btn attack-btn">⚔️</button>
+                            </div>
+                        </div>
+
                         <!-- Game Modal for reading documents -->
                         <div id="game-modal" class="game-modal" style="display: none;">
                             <div class="game-modal-content">

@@ -14,6 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const SWORD_RANGE = 60;
     const SWORD_SWING_DURATION = 15; // frames
 
+    const COLORS = {
+        wall: '#111',
+        door: {
+            closed: '#3b82f6',
+            open: 'rgba(0,0,0,0.5)'
+        },
+        text: '#fff',
+        doc: '#fff',
+        background: '#2d2d2d'
+    };
+
     let gameState = {
         currentLevel: 'hub',
         paused: false,
@@ -26,9 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
             attackTimer: 0
         },
         keys: { w: false, a: false, s: false, d: false },
+        mobileKeys: { w: false, a: false, s: false, d: false },
         mouse: { x: 0, y: 0, leftDown: false, rightDown: false },
         entities: [],
-        particles: []
+        particles: [],
+        interactableDoc: null
     };
 
     // --- Level Data ---
@@ -240,14 +253,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function checkInteractables() {
+        const level = levels[gameState.currentLevel];
+        let closestDoc = null;
+        let closestDist = 9999;
+
+        level.docs.forEach(doc => {
+            const dx = gameState.player.x - (doc.x + doc.w/2);
+            const dy = gameState.player.y - (doc.y + doc.h/2);
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            if (dist < 60 && dist < closestDist) {
+                closestDist = dist;
+                closestDoc = doc;
+            }
+        });
+
+        gameState.interactableDoc = closestDoc;
+    }
+
     function update() {
-        // Player Movement
+        // Player Movement (Merge keyboard and mobile)
         let dx = 0;
         let dy = 0;
-        if (gameState.keys.w) dy -= PLAYER_SPEED;
-        if (gameState.keys.s) dy += PLAYER_SPEED;
-        if (gameState.keys.a) dx -= PLAYER_SPEED;
-        if (gameState.keys.d) dx += PLAYER_SPEED;
+        
+        const w = gameState.keys.w || gameState.mobileKeys.w;
+        const s = gameState.keys.s || gameState.mobileKeys.s;
+        const a = gameState.keys.a || gameState.mobileKeys.a;
+        const d = gameState.keys.d || gameState.mobileKeys.d;
+
+        if (w) dy -= PLAYER_SPEED;
+        if (s) dy += PLAYER_SPEED;
+        if (a) dx -= PLAYER_SPEED;
+        if (d) dx += PLAYER_SPEED;
+
+        // Auto-orient angle if using mobile keys (since there's no mouse)
+        if ((gameState.mobileKeys.w || gameState.mobileKeys.a || gameState.mobileKeys.s || gameState.mobileKeys.d) && (Math.abs(dx) > 0 || Math.abs(dy) > 0)) {
+             gameState.player.angle = Math.atan2(dy, dx);
+        }
 
         // Normalize diagonal speed
         if (dx !== 0 && dy !== 0) {
@@ -257,6 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nextX = gameState.player.x + dx;
         const nextY = gameState.player.y + dy;
+
+        // Reset interactable status each frame
+        checkInteractables();
 
         // Collision Detection (Walls & Closed Doors)
         let canMoveX = true;
@@ -339,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw Walls
-        ctx.fillStyle = '#111';
+        ctx.fillStyle = COLORS.wall; 
         level.walls.forEach(wall => {
             ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
         });
@@ -351,13 +397,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillRect(door.x, door.y, door.w, door.h);
                 
                 // HP Bar
-                ctx.fillStyle = 'red';
+                ctx.fillStyle = '#ef4444'; // Red
                 ctx.fillRect(door.x, door.y - 10, door.w, 5);
-                ctx.fillStyle = '#0f0';
+                ctx.fillStyle = '#22c55e'; // Green
                 ctx.fillRect(door.x, door.y - 10, door.w * (door.hp / door.maxHp), 5);
 
                 // Label
-                ctx.fillStyle = '#fff';
+                ctx.fillStyle = COLORS.text;
                 ctx.font = '12px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText(door.label, door.x + door.w/2, door.y + door.h/2);
@@ -374,10 +420,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Draw Documents
         level.docs.forEach(doc => {
-            ctx.fillStyle = '#fff';
+            // Highlight if interactable
+            if (gameState.interactableDoc === doc) {
+                ctx.strokeStyle = '#fbbf24'; // Amber
+                ctx.lineWidth = 3;
+                ctx.strokeRect(doc.x - 2, doc.y - 2, doc.w + 4, doc.h + 4);
+                
+                // Prompt
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText("Press E", doc.x + doc.w/2, doc.y - 20);
+            }
+
+            ctx.fillStyle = COLORS.doc;
             ctx.fillRect(doc.x, doc.y, doc.w, doc.h);
-            // Lines representing text
-            ctx.fillStyle = '#ccc';
+            // Lines representation
+            ctx.fillStyle = '#9ca3af';
             ctx.fillRect(doc.x + 5, doc.y + 10, doc.w - 10, 2);
             ctx.fillRect(doc.x + 5, doc.y + 18, doc.w - 10, 2);
             ctx.fillRect(doc.x + 5, doc.y + 26, doc.w - 20, 2);
@@ -424,8 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.globalAlpha = 1;
         });
         
-        // UI
-        ctx.fillStyle = '#fff';
+        // Area Text
+        ctx.fillStyle = COLORS.text;
         ctx.font = '16px Arial';
         ctx.textAlign = 'left';
         ctx.fillText(`Area: ${gameState.currentLevel.toUpperCase()}`, 10, 20);
