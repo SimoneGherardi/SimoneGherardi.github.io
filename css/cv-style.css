@@ -87,7 +87,7 @@ body {
 .cv-hero {
     background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
     color: var(--white);
-    padding: 6rem 2rem;
+    padding: 3.5rem 2rem;
 }
 
 .hero-content {
@@ -200,7 +200,7 @@ body {
 
 /* Sections */
 .cv-section {
-    padding: 5rem 2rem;
+    padding: 3rem 2rem;
     background: var(--white);
 }
 
@@ -217,16 +217,16 @@ body {
     font-size: 2.25rem;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 3rem;
-    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
     border-bottom: 3px solid var(--secondary-color);
     display: inline-block;
 }
 
 /* Work Experience */
 .experience-item {
-    margin-bottom: 3rem;
-    padding: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
     background: var(--white);
     border-radius: 0.75rem;
     border-left: 4px solid var(--secondary-color);
@@ -294,7 +294,7 @@ body {
 }
 
 .role {
-    padding: 1.5rem;
+    padding: 1rem;
     background: var(--light-bg);
     border-radius: 0.5rem;
 }
@@ -335,8 +335,8 @@ body {
 
 /* Education */
 .education-item {
-    margin-bottom: 2.5rem;
-    padding: 2rem;
+    margin-bottom: 1.75rem;
+    padding: 1.5rem;
     background: var(--white);
     border-radius: 0.75rem;
     border-top: 4px solid var(--secondary-color);
@@ -426,8 +426,8 @@ body {
 
 /* Projects */
 .project-item {
-    margin-bottom: 2.5rem;
-    padding: 2rem;
+    margin-bottom: 1.75rem;
+    padding: 1.5rem;
     background: var(--white);
     border-radius: 0.75rem;
     border: 2px solid var(--border-color);
@@ -492,11 +492,11 @@ body {
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .skill-category {
-    padding: 1.5rem;
+    padding: 1rem;
     background: var(--white);
     border-radius: 0.75rem;
     border-left: 4px solid var(--secondary-color);
@@ -568,8 +568,8 @@ body {
 .contact-links {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .contact-link {
