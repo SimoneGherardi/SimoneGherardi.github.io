@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modal-body');
     const closeBtn = document.querySelector('.close-modal');
 
+    // Mobile Control Buttons
+    const btnUp = document.getElementById('btn-up');
+    const btnDown = document.getElementById('btn-down');
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const btnInteract = document.getElementById('btn-interact');
+    const btnAttack = document.getElementById('btn-attack');
+
     // --- Game Constants & State ---
     const TILE_SIZE = 50;
     const PLAYER_SPEED = 4;
