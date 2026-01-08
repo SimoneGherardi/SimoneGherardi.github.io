@@ -190,15 +190,16 @@ body {
 
 @media (max-width: 768px) {
     .hero-flex {
-        flex-direction: column-reverse;
+        flex-direction: column; /* Text on top, image below */
         gap: 2rem;
         text-align: center;
     }
 
     .hero-image {
-        width: 180px; /* Smaller for mobile */
-        height: 180px;
+        width: 140px; /* Reduced further */
+        height: 140px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin: 0 auto; /* Ensure centering */
     }
 
     .hero-links {
@@ -206,11 +207,11 @@ body {
     }
 
     .hero-text h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem; /* Slightly smaller to fit better */
     }
     
     .hero-title {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
     }
 
     .hero-description {
