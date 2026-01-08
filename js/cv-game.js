@@ -16,6 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnInteract = document.getElementById('btn-interact');
     const btnAttack = document.getElementById('btn-attack');
 
+    // Visibility Observer for Mobile Controls
+    const gameSection = document.getElementById('cv-game');
+    const mobileControls = document.getElementById('mobile-controls');
+    if (gameSection && mobileControls) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    mobileControls.classList.add('active');
+                } else {
+                    mobileControls.classList.remove('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        observer.observe(gameSection);
+    }
+
     // --- Game Constants & State ---
     const TILE_SIZE = 50;
     const PLAYER_SPEED = 4;
@@ -82,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
                  {id: 0, x: 350, y: 450, w: 100, h: 50, hp: 0, maxHp: 100, target: 'hub', label: 'Back to Hub', color: '#666', open: true}
             ],
             docs: [
-                {x: 200, y: 200, w: 40, h: 40, title: 'Amadeus (2024-Present)', content: 'Backend Software Developer. Working on Revenue Management Solutions using C++, Bash, Git, Jenkins, MongoDB. Developing features for SAFe trains.'},
-                {x: 600, y: 200, w: 40, h: 40, title: 'Previous Role', content: 'Consultant via ALTEN. Worked on critical backend systems.'}
+                {x: 100, y: 150, w: 40, h: 40, title: 'Amadeus (via ALTEN) (2024-Present)', content: '<h3>Backend Software Developer & Scrum Master</h3><p>Develop features for Revenue Management Solutions Train (SAFe) using C++, Bash, Git, Jenkins, MongoDB.</p><p>Scrum Master facilitating ceremonies and coordinating with management.</p>'},
+                {x: 650, y: 150, w: 40, h: 40, title: 'Coding Giants (2023-2024)', content: '<h3>Coding Teacher</h3><p>Role: Teaching basics of coding and videogame programming to kids (Scratch, Minecraft Education).</p>'},
+                {x: 350, y: 300, w: 40, h: 40, title: 'Agriturismo Il Lago dei Sogni (2013-2021)', content: '<h3>Waiter & Support Staff</h3><p>Managed customer interactions and supported kitchen operations.</p>'}
             ]
         },
         'education': {
@@ -98,8 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
                  {id: 0, x: 0, y: 200, w: 50, h: 100, hp: 0, maxHp: 100, target: 'hub', label: 'Back', color: '#666', open: true}
             ],
             docs: [
-                {x: 400, y: 150, w: 40, h: 40, title: 'University Degree', content: 'Details about university education would go here. (Extracted from CV)'},
-                {x: 400, y: 350, w: 40, h: 40, title: 'Certifications', content: 'Any relevant certifications.'}
+                {x: 200, y: 150, w: 40, h: 40, title: 'LUT University (Finland)', content: '<h3>MSc in Technology</h3><p><b>Computational Engineering:</b> Computer Vision & Pattern Recognition.</p><p>Tags: Machine Learning, UX Design, GPGPU Computing.</p>'},
+                {x: 550, y: 150, w: 40, h: 40, title: 'Politecnico di Milano', content: '<h3>MSc Computer Science & Engineering</h3><p>Grade: 92/110. Specialization in AI.</p><p>Thesis: "Human Micro Gesture Recognition by Adversarial Training".</p>'},
+                {x: 375, y: 350, w: 40, h: 40, title: 'Unimore', content: '<h3>Bachelor Computer Engineering</h3><p>Grade: 93/110.</p><p>Thesis: "Drivers Manager Project" (Django).</p>'}
             ]
         },
         'projects': {
@@ -114,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
                  {id: 0, x: 350, y: 0, w: 100, h: 50, hp: 0, maxHp: 100, target: 'hub', label: 'Back', color: '#666', open: true}
             ],
             docs: [
-                {x: 200, y: 250, w: 40, h: 40, title: 'Personal Website', content: 'This website! Built with HTML, CSS, JS.'},
-                {x: 600, y: 250, w: 40, h: 40, title: 'Game Engine', content: 'Custom C++ Game Engine styled after Minecraft.'}
+                {x: 250, y: 250, w: 40, h: 40, title: 'Kiyo and the Unreliable Hero', content: '<h3>Videogame Beta (Unity/C#)</h3><p>Winner of InsertCoin 2021.</p><p>Team project developed in 3 months. Available on Itch.io.</p><p><a href="https://polimi-game-collective.itch.io/kiyo-and-the-unreliable-hero" target="_blank" style="color: #60a5fa">Play Here</a></p>'},
+                {x: 500, y: 250, w: 40, h: 40, title: 'CGRed - Vulkan Engine', content: '<h3>Platform Maker (C++/Vulkan)</h3><p>Low-level graphics programming project.</p><p>Demonstration of custom game engine capabilities.</p><p><a href="https://youtu.be/1tNf1K6NSZ0" target="_blank" style="color: #60a5fa">Watch Video</a></p>'}
             ]
         },
         'skills': {
@@ -130,10 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
                  {id: 0, x: 750, y: 200, w: 50, h: 100, hp: 0, maxHp: 100, target: 'hub', label: 'Back', color: '#666', open: true}
             ],
             docs: [
-                {x: 150, y: 150, w: 40, h: 40, title: 'C++', content: 'Expert proficiency in Modern C++.'},
-                {x: 150, y: 350, w: 40, h: 40, title: 'Python', content: 'Strong scripting and automation skills.'},
-                {x: 650, y: 150, w: 40, h: 40, title: 'Web Dev', content: 'HTML, CSS, JS, Bootstrap.'},
-                {x: 650, y: 350, w: 40, h: 40, title: 'Tools', content: 'Git, Jenkins, Jira, Docker.'}
+                {x: 150, y: 150, w: 40, h: 40, title: 'Advanced Skills', content: '<h3>Tech Stack</h3><ul><li>C++</li><li>Python</li><li>Bash & Git</li><li>C# & Unity</li><li>Agile / SAFe / Jira</li></ul>'},
+                {x: 450, y: 150, w: 40, h: 40, title: 'Good Knowledge', content: '<h3>Tools & Frameworks</h3><ul><li>CI/CD (Jenkins)</li><li>Cloud</li><li>MongoDB</li><li>Web (Django, HTML/CSS)</li><li>Vulkan</li></ul>'},
+                {x: 150, y: 350, w: 40, h: 40, title: 'Languages', content: '<h3>Spoken Languages</h3><ul><li>Italian (Native)</li><li>English (C1 Proficient)</li><li>French (B2 Upper-Intermediate)</li></ul>'},
+                {x: 450, y: 350, w: 40, h: 40, title: 'Interests', content: '<h3>Hobbies</h3><ul><li>Videogame Design & Programming</li><li>Video Editing</li></ul>'}
             ]
         }
     };
