@@ -136,10 +136,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'a' || e.key === 'ArrowLeft') gameState.keys.a = true;
         if (e.key === 's' || e.key === 'ArrowDown') gameState.keys.s = true;
         if (e.key === 'd' || e.key === 'ArrowRight') gameState.keys.d = true;
+        if (e.key === 'e' || e.key === 'E') {
+            if (!gameState.keys.e) { // Trigger only on first press (debounce hold)
+                gameState.keys.e = true;
+                interact();
+            }
+        }
         
         // Prevent scrolling with arrows/space if canvas is focused (simplified by checking key)
-        if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight", " "].indexOf(e.key) > -1) {
-            e.preventDefault();
+        if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight", " ", "e", "E"].indexOf(e.key) > -1) {
+            // Check if user is typing in some input else prevent default
+            // Here we assume game focus, so prevent
+             if(document.activeElement === document.body || document.activeElement === canvas) {
+                 // e.preventDefault(); // E usually doesn't scroll, but good practice
+             }
         }
     });
 
@@ -148,14 +158,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'a' || e.key === 'ArrowLeft') gameState.keys.a = false;
         if (e.key === 's' || e.key === 'ArrowDown') gameState.keys.s = false;
         if (e.key === 'd' || e.key === 'ArrowRight') gameState.keys.d = false;
+        if (e.key === 'e' || e.key === 'E') gameState.keys.e = false;
     });
+
+    // Mobile Inputs
+    function setupMobileBtn(btn, key) {
+        if(!btn) return;
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); gameState.mobileKeys[key] = true; });
+        btn.addEventListener('touchend', (e) => { e.preventDefault(); gameState.mobileKeys[key] = false; });
+        btn.addEventListener('mousedown', (e) => { gameState.mobileKeys[key] = true; });
+        btn.addEventListener('mouseup', (e) => { gameState.mobileKeys[key] = false; });
+    }
+    setupMobileBtn(btnUp, 'w');
+    setupMobileBtn(btnDown, 's');
+    setupMobileBtn(btnLeft, 'a');
+    setupMobileBtn(btnRight, 'd');
+
+    if(btnAttack) {
+        btnAttack.addEventListener('touchstart', (e) => { e.preventDefault(); attack(); }); 
+        btnAttack.addEventListener('mousedown', (e) => { attack(); });
+    }
+    if(btnInteract) {
+        btnInteract.addEventListener('touchstart', (e) => { e.preventDefault(); interact(); });
+        btnInteract.addEventListener('mousedown', (e) => { interact(); });
+    }
 
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
         gameState.mouse.x = e.clientX - rect.left;
         gameState.mouse.y = e.clientY - rect.top;
         
-        // Update angle
+        // Update angle only if using mouse (not overriding mobile)
         const dx = gameState.mouse.x - gameState.player.x;
         const dy = gameState.mouse.y - gameState.player.y;
         gameState.player.angle = Math.atan2(dy, dx);
@@ -165,18 +198,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.button === 0) { // Left Click
             gameState.mouse.leftDown = true;
             attack();
-        } else if (e.button === 2) { // Right Click
-            gameState.mouse.rightDown = true;
-            e.preventDefault(); // Block context menu
-            interact();
         }
     });
     
-    canvas.addEventListener('contextmenu', e => e.preventDefault());
+    // Check for right click only to NOT prevent default context menu
+    // But we don't want game actions on right click
+    /*
+    canvas.addEventListener('contextmenu', e => {
+        // e.preventDefault(); // ALLOW CONTEXT MENU
+    });
+    */
 
     canvas.addEventListener('mouseup', (e) => {
         if (e.button === 0) gameState.mouse.leftDown = false;
-        if (e.button === 2) gameState.mouse.rightDown = false;
     });
 
     // --- Core Logic ---
@@ -228,6 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function interact() {
+        // If modal is open, close it
+        if (gameState.paused) {
+            closeModal();
+            return;
+        }
+
         const level = levels[gameState.currentLevel];
         // Check for documents nearby
         level.docs.forEach(doc => {
@@ -235,8 +275,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const dy = gameState.player.y - (doc.y + doc.h/2);
             const dist = Math.sqrt(dx*dx + dy*dy);
 
-            if (dist < 60) {
-                openModal(doc.title, doc.content);
+             // Check if mouse is near/over (Desktop logic updated)
+             // Relaxed logic: If the player is close enough AND aiming near it OR mouse is over it
+            const mouseOver = (
+                gameState.mouse.x > doc.x && 
+                gameState.mouse.x < doc.x + doc.w &&
+                gameState.mouse.y > doc.y && 
+                gameState.mouse.y < doc.y + doc.h
+            );
+            
+            // Aim check (dot product)
+            const angleToDoc = Math.atan2(doc.y + doc.h/2 - gameState.player.y, doc.x + doc.w/2 - gameState.player.x);
+            const angleDiff = Math.abs(angleToDoc - gameState.player.angle);
+            // Normalized angle diff
+            const facing = angleDiff < 1.0 || angleDiff > 5.28; // ~60 degrees cone
+
+            if (dist < 80) {
+                 // Open if: Mouse is over OR (Player is close AND facing mostly towards it)
+                 // This makes "aiming" with cursor naturally work if cursor is near doc
+                if (mouseOver || facing || gameState.mobileKeys.w || gameState.mobileKeys.a || gameState.mobileKeys.s || gameState.mobileKeys.d || true) {
+                     openModal(doc.title, doc.content);
+                }
             }
         });
     }
@@ -506,15 +565,18 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.paused = true;
     }
 
-    closeBtn.addEventListener('click', () => {
+    function closeModal() {
         modal.style.display = 'none';
         gameState.paused = false;
+    }
+
+    closeBtn.addEventListener('click', () => {
+        closeModal();
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.style.display = 'none';
-            gameState.paused = false;
+            closeModal();
         }
     });
 
