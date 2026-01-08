@@ -488,6 +488,32 @@ body {
     font-weight: bold;
 }
 
+.project-video {
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.project-video iframe {
+    display: block;
+}
+
+.project-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.project-text {
+    flex: 1;
+}
+
+.project-video-small {
+    flex: 0 0 300px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
 /* Skills */
 .skills-grid {
     display: grid;
@@ -636,6 +662,16 @@ body {
     .hero-image {
         width: 200px;
         height: 200px;
+    }
+    
+    .project-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .project-video-small {
+        flex: 1 0 auto;
+        width: 100%;
     }
     
     .cv-section {
